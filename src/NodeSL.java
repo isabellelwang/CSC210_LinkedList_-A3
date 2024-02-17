@@ -18,7 +18,7 @@
         return data;
       }
 
-      /** @param d new data vaue */
+      /** @param d new data value */
       public void setData(T d) {
         this.data = d;
       }
