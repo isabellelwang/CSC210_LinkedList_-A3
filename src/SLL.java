@@ -246,16 +246,34 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
      * @param afterHere marks the position in this where the new list should go
      */
     public void spliceByCopy(SLL<T> list, NodeSL<T> afterHere) {
+
         SLL<T> list2 = new SLL<>(list);
-        NodeSL<T> newHead = afterHere;
-        list2.addFirst(newHead.getData());
 
-        for (NodeSL<T> item = head.getNext(); item != null; item = item.getNext()) {
-            if (item.getNext() == newHead) {
-                list2.addAfter(newHead, item.getNext().getData());
-            }
+        if(this.equals(list)) {
+            throw new SelfInsertException();
         }
+        else if (afterHere == null) {
+            NodeSL<T> addItem = list2.getHead();
+            this.addFirst(addItem.getData());
+            NodeSL<T> previousItem = this.getHead();
 
+            for (NodeSL<T> item = list2.getHead().getNext(); item != null; item = item.getNext()) {
+                this.addAfter(previousItem, item.getData());
+                previousItem = previousItem.getNext();
+            }
+
+        } else if (!list.isEmpty()) {
+            NodeSL<T> afterNode = afterHere;
+            T copiedItem = list2.getHead().getData();
+            this.addAfter(afterHere, copiedItem);
+            afterNode = afterNode.getNext();
+            for (NodeSL<T> item = list2.getHead().getNext(); item != null; item = item.getNext()) {
+                this.addAfter(afterNode, item.getData());
+                afterNode = afterNode.getNext();
+
+            }
+
+        }
     }
 
     /**
@@ -312,10 +330,19 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
         // System.out.println(list2.toString());
 
         // splice by copy
-        SLL<String> list = SLLTest.makeSLL(SLLTest.dac);
-        SLL<String> list2 = SLLTest.makeSLL(SLLTest.eb);
-        list.spliceByCopy(list2, list.getHead());
-        System.out.println(list2.toString());
+        // SLL<String> list = SLLTest.makeSLL(SLLTest.dac);
+        // SLL<String> list2 = SLLTest.makeSLL(SLLTest.eb);
+        // list.spliceByCopy(list2, list.getHead());
+        // System.out.println(list.toString());
+
+        SLL<String> list = SLLTest.makeSLL(SLLTest.debacfg);
+        SLL<String> list2 = SLLTest.makeSLL(SLLTest.hi);
+        list.spliceByCopy(list2, null);
+
+        list = SLLTest.makeSLL(SLLTest.abc);
+        list2 = SLLTest.makeSLL(SLLTest.empty);
+        list.spliceByCopy(list2, list.getHead().getNext());
+        System.out.println(list);
     }
 
 }
