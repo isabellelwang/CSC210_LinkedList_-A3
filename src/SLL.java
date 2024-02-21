@@ -265,18 +265,11 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
             for (NodeSL<T> item = list2.getHead().getNext(); item != null; item = item.getNext()) {
                 this.addAfter(afterNode, item.getData());
                 afterNode = afterNode.getNext();
-
             }
 
         }
     }
 
-    // `subseqByTransfer(afterHere,toHere)` extracts a subsequence out of the
-    // original list and returns it as a new list (thus shortening the original
-    // list). The extracted sequence begins with the element following `afterHere`
-    // and goes up to and including `toHere`. The original list should skip from
-    // `afterHere` to the element that originally followed `toHere`. If `afterHere`
-    // is `null` it should extract a sequence from the head of the list onwards.
     /**
      * Extracts a subsequence of nodes and returns them as a new list
      * 
@@ -287,45 +280,25 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
     public SLL<T> subseqByTransfer(NodeSL<T> afterHere, NodeSL<T> toHere) {
         SLL<T> newList = new SLL<T>();
 
-        // if (afterHere == null) {
-        // NodeSL<T> newHead = this.head;
-        // newList.addFirst(newHead.getData());
-        // this.removeFirst();
+        if(afterHere == null) {
+            for(NodeSL<T> item = head; item != toHere.getNext(); item = item.getNext()) {
+                newList.addLast(item.getData()); 
+            }
+            for(int i = 0; i < newList.size() - 1; i++) {
+                head.setNext(head.getNext().getNext());
+            }
+            removeFirst(); 
 
-        // for (NodeSL<T> item = newHead.getNext(); item != toHere.getNext(); item =
-        // item.getNext()) {
-        // newList.addAfter(newHead, item.getNext().getData());
-        // this.removeFirst();
-        // }
-        // } else {
-        // adding the head
-        // NodeSL<T> newHead = afterHere.getNext();
-        // newList.addFirst(newHead.getData());
-        // this.removeAfter(afterHere);
-        // // newHead = newList.getHead();
+        }else {
+            for(NodeSL<T> item = afterHere.getNext(); item != toHere.getNext(); item = item.getNext()) {
+                newList.addLast(item.getData()); 
+            }
+            for(int i = 0; i < newList.size(); i++) {
+                afterHere.setNext(afterHere.getNext().getNext());
+            }
 
-        // for (NodeSL<T> item = afterHere.getNext(); item != toHere.getNext(); item = item.getNext()) {
-        //     newList.addLast(item.getData());
-        //     this.removeAfter(item;
-        //     // System.out.println("hi");
-        //     newHead = newHead.getNext();
-        // }
-
-        for(NodeSL<T> item = afterHere.getNext(); item != toHere.getNext(); item = item.getNext()) {
-            item 
         }
 
-
-
-        // NodeSL<T> newHead = afterHere.getNext();
-
-        // for(int i = 0; i < list.size(); i++)
-        // for(NodeSL<T> item )
-        // }
-
-        // for(int i = 0; i <)
-        // // this.removeAfter(afterHere);
-        // }
         return newList;
     }
 
@@ -339,7 +312,10 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
     public void spliceByTransfer(SLL<T> list, NodeSL<T> afterHere) {
         NodeSL<T> afterNode = afterHere;
 
-        if (afterHere == null) {
+        if(this.equals(list)) {
+            throw new SelfInsertException();
+        }
+        else if (afterHere == null) {
             for (int i = 0; i < list.size() + 1; i++) {
                 this.addFirst(list.tail.getData());
                 list.removeLast();
@@ -356,6 +332,7 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
 
     }
 
+    //testing
     public static void main(String[] args) {
         // SLL<String> list = SLLTest.makeSLL(SLLTest.abc);
         // System.out.println(list.removeAfter(list.getHead().getNext()));
@@ -393,8 +370,8 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
         list = SLLTest.makeSLL(SLLTest.debac);
         list2 = list.subseqByTransfer(list.getHead(),
                 list.getHead().getNext().getNext());
-        System.out.println(list2.toString()); // B
-        System.out.println(list.toString());
+        // System.out.println(list2.toString()); // B
+        // System.out.println(list.toString());
 
         // // list = SLLTest.makeSLL(SLLTest.abc);
         // // list2 = list.subseqByTransfer(list.getHead(), list.getHead().getNext());
@@ -411,6 +388,10 @@ public class SLL<T> implements Phase1SLL<T>, Phase2SLL<T>, Phase4SLL<T> {
         // list.spliceByTransfer(list2, null);
         // System.out.println(list.toString());
         // System.out.println(list2.toString());
-    }
 
+        list = SLLTest.makeSLL(SLLTest.hidebacfg);
+        list2 = list.subseqByTransfer(null, list.getHead().getNext());
+          System.out.println(list2.toString()); // B
+        System.out.println(list.toString());
+    }
 }
